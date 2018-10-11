@@ -7,7 +7,10 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import org.generation.cartapp.Model.Persona;
 import org.generation.cartapp.Network.Peticiones.Registro;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class MainActivity extends AppCompatActivity implements Registro.onRegistroListener {
 
@@ -15,6 +18,12 @@ public class MainActivity extends AppCompatActivity implements Registro.onRegist
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        if(!Persona.listAll(Persona.class).isEmpty()){
+            Intent intent=new Intent(MainActivity.this,Home.class);
+            startActivity(intent);
+        }
+
     }
 
 
@@ -43,9 +52,21 @@ public class MainActivity extends AppCompatActivity implements Registro.onRegist
                 Toast.makeText(MainActivity.this,"Todo salio chidoo",Toast.LENGTH_SHORT).show();
             }
         });*/
+        try {
+            Persona persona=new Persona();
+            JSONObject json=new JSONObject(data);
+            persona.setNombre(json.optString("nombre","-"));
+            persona.setPaterno(json.optString("paterno","-"));
+            persona.setMaterno(json.optString("materno","-"));
+            persona.setCorreo(json.optString("correo","-"));
+            persona.setQr(json.optString("qr","-"));
+            persona.save();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
 
         Intent intent=new Intent(MainActivity.this,Home.class);
-        intent.putExtra("Datos",data);
         startActivity(intent);
     }
 
