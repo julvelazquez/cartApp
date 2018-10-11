@@ -8,6 +8,7 @@ import android.util.Base64;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import org.generation.cartapp.Model.Persona;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -22,7 +23,7 @@ public class Home extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-        String data=getIntent().getStringExtra("Datos");
+        /*String data=getIntent().getStringExtra("Datos");
         try {
             JSONObject json=new JSONObject(data);
             nombreDta=json.optString("nombre","-");
@@ -33,24 +34,31 @@ public class Home extends AppCompatActivity {
 
         } catch (JSONException e) {
             e.printStackTrace();
-        }
+        }*/
+
+        Persona persona=Persona.listAll(Persona.class)
+                .get(Persona.listAll(Persona.class).size()-1);
 
         nombreTxt=findViewById(R.id.nombre);
-        nombreTxt.setText(nombreDta);
+        nombreTxt.setText(persona.getNombre());
 
         paternoTxt=findViewById(R.id.paterno);
-        paternoTxt.setText(paternoDta);
+        paternoTxt.setText(persona.getPaterno());
 
         maternoTxt=findViewById(R.id.materno);
-        maternoTxt.setText(maternoDta);
+        maternoTxt.setText(persona.getMaterno());
 
         correoTxt=findViewById(R.id.correo);
-        correoTxt.setText(correoDta);
+        correoTxt.setText(persona.getCorreo());
 
-        byte[] decodedString = Base64.decode(qrDta, Base64.DEFAULT);
+        byte[] decodedString = Base64.decode(persona.getQr(), Base64.DEFAULT);
         Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
 
         qr=findViewById(R.id.qr);
         qr.setImageBitmap(decodedByte);
+
+
+
+
     }
 }
